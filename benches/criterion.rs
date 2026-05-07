@@ -1,5 +1,5 @@
 use std::hint::black_box;
-use broken_app::{algo, sum_even};
+use broken_app::{algo, normalize, sum_even};
 use criterion::{criterion_group, criterion_main, BatchSize, Criterion};
 
 fn bench_sum_even(c: &mut Criterion) {
@@ -24,5 +24,10 @@ fn bench_dedup(c: &mut Criterion) {
     });
 }
 
-criterion_group!(benches, bench_sum_even, bench_fib, bench_dedup);
+fn bench_normalize(c: &mut Criterion) {
+    let text_for_normalize = " Hello   World \t Rust Profiling ".repeat(20_000);
+    c.bench_function("normalize_broken", |b| b.iter(|| normalize(black_box(&text_for_normalize))));
+}
+
+criterion_group!(benches, bench_sum_even, bench_fib, bench_dedup, bench_normalize);
 criterion_main!(benches);
