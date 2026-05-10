@@ -11,10 +11,12 @@ pub fn leak_buffer(input: &[u8]) -> usize {
     input.iter().copied().filter(|&b| b != 0).count()
 }
 
-/// Небрежная нормализация строки: удаляем пробелы и приводим к нижнему регистру,
-/// но игнорируем повторяющиеся пробелы/табуляции внутри текста.
+/// Небрежная нормализация строки: удаляем пробелы и приводим к нижнему регистру
 pub fn normalize(input: &str) -> String {
-    input.replace(' ', "").to_lowercase()
+    input
+        .split_whitespace()
+        .collect::<String>()
+        .to_lowercase()
 }
 
 ///Среднее положительных элементов
