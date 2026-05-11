@@ -1,4 +1,4 @@
-use broken_app::{algo, leak_buffer, normalize, sum_even};
+use broken_app::{algo, leak_buffer, normalize, sum_even, use_after_free};
 
 #[test]
 fn sums_even_numbers() {
@@ -40,4 +40,15 @@ fn averages_only_positive() {
 fn race_increment_is_correct() {
     let total = broken_app::concurrency::race_increment(1_000, 4);
     assert_eq!(total, 4_000);
+}
+
+#[test]
+fn use_after_free_correct() {
+    let result:i32;
+
+    unsafe {
+        result = use_after_free()
+    }
+
+    assert_eq!(result, 84); //42 * 2 = 84
 }
