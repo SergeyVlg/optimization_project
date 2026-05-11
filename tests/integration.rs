@@ -35,3 +35,9 @@ fn averages_only_positive() {
     // Ожидается (5 + 15) / 2 = 10, но текущая реализация делит на все элементы.
     assert!((broken_app::average_positive(&nums) - 10.0).abs() < f64::EPSILON);
 }
+
+#[test]
+fn race_increment_is_correct() {
+    let total = broken_app::concurrency::race_increment(1_000, 4);
+    assert_eq!(total, 4_000);
+}
