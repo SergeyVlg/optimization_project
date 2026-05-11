@@ -44,11 +44,7 @@ fn race_increment_is_correct() {
 
 #[test]
 fn use_after_free_correct() {
-    let result:i32;
-
-    unsafe {
-        result = use_after_free()
-    }
+    let result = use_after_free();
 
     assert_eq!(result, 84); //42 * 2 = 84
 }
