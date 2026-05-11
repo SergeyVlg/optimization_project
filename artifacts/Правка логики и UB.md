@@ -94,3 +94,4 @@ help: and (1) occurred earlier here
 static COUNTER: AtomicU64 = AtomicU64::new(0);
 ```
 После правки тесты успешно проходят, а запуск с MIRI не выявляет больше гонок данных.
+Правка выполнена в коммите с SHA 2c187d59860c55b9e5a3174f2f0b7c07f023b766.
