@@ -107,6 +107,30 @@ static COUNTER: AtomicU64 = AtomicU64::new(0);
 После правки тесты успешно проходят, а запуск с MIRI не выявляет больше гонок данных.
 Правка выполнена в коммите с SHA 2c187d59860c55b9e5a3174f2f0b7c07f023b766.
 
+### 5. Добавление теста для функции use_after_free.
+В файле lib.rs содержится небезопасная функция use_after_free, которая возвращает целое число 84, используя указатели. На эту функцию также не было тестов, поэтому был добавлен тест use_after_free_correct для проверки её поведения.
+Сам тест успешно проходит, однако запуск с MIRI выявляет ошибку использования после освобождения памяти (висячий указатель):
+
+```plain
+error: Undefined Behavior: memory access failed: alloc118218 has been freed, so this pointer is dangling
+  --> src\lib.rs:43:11
+   |
+43 |     val + *raw
+   |           ^^^^ Undefined Behavior occurred here
+   |
+   = help: this indicates a bug in the program: it performed an invalid operation, and caused Undefined Behavior
+   = help: see https://doc.rust-lang.org/nightly/reference/behavior-considered-undefined.html for further information
+help: alloc118218 was allocated here:
+  --> src\lib.rs:39:13
+   |
+39 |     let b = Box::new(42_i32);
+   |             ^^^^^^^^^^^^^^^^
+help: alloc118218 was deallocated here:
+  --> src\lib.rs:42:5
+   |
+42 |     drop(Box::from_raw(raw));
+```
+
 ## Оптимизация
 ### 1. Первоначальный анализ
 
